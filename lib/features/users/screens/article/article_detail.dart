@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../models/article_model.dart';
-import '../../../viewmodel/translateViewModel.dart';
 import '../../../viewmodel/favorite_viewmodel.dart';
 import '../../../viewmodel/ai_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +8,6 @@ import 'related_articles_widget.dart';
 import 'ramdom_article.dart';
 import 'article_detail_bottom_menu.dart';
 import '../../../viewmodel/speech_viewmodel.dart';
-import 'article_speech_widget.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ArticleDetail extends StatefulWidget {
@@ -22,12 +20,8 @@ class ArticleDetail extends StatefulWidget {
 
 class _ArticleDetailState extends State<ArticleDetail> {
   final FavoriteViewModel _favoriteVM = FavoriteViewModel();
-  final TranslateViewModel _translateVM = TranslateViewModel();
   final AiViewModel _aiVM = AiViewModel();
   final SpeechViewModel _speechVM = SpeechViewModel();
-
-  List<Map<String, String>>? _translatedParagraphs;
-  bool _isTranslating = false;
 
   String? _summary;
   bool _isSummarizing = false;
@@ -37,25 +31,6 @@ class _ArticleDetailState extends State<ArticleDetail> {
     _speechVM.stopReading();
     _speechVM.dispose();
     super.dispose();
-  }
-
-  Future<void> _translateContent() async {
-    setState(() => _isTranslating = true);
-
-    final content = widget.article.content.isNotEmpty
-        ? widget.article.content
-        : widget.article.description;
-
-    final result = await _translateVM.translateParagraphs(content);
-
-    setState(() {
-      _translatedParagraphs = result;
-      _isTranslating = false;
-    });
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Đã dịch bài!")));
   }
 
   void _shareArticle() {
@@ -192,20 +167,9 @@ class _ArticleDetailState extends State<ArticleDetail> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) => ArticleDetailBottomMenu(
-        isTranslating: _isTranslating,
-        onTranslate: () {
-          Navigator.pop(ctx);
-          _translateContent();
-        },
         onSummary: () {
           Navigator.pop(ctx);
           _showSummaryOptions();
-        },
-        onSentiment: () {
-          Navigator.pop(ctx);
-        },
-        onCopy: () {
-          Navigator.pop(ctx);
         },
         onShare: () {
           Navigator.pop(ctx);
@@ -269,12 +233,6 @@ class _ArticleDetailState extends State<ArticleDetail> {
                 ),
                 const SizedBox(height: 8),
 
-                ArticleSpeechWidget(
-                  speechVM: _speechVM,
-                  content: "${article.title}. ${article.description}".trim(),
-                ),
-                const SizedBox(height: 20),
-
                 Text(
                   "Published: ${article.date.toLocal().toString().split(' ')[0]}",
                   style: TextStyle(
@@ -324,49 +282,17 @@ class _ArticleDetailState extends State<ArticleDetail> {
                   ),
                   const SizedBox(height: 20),
                 ],
-
-                _translatedParagraphs != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _translatedParagraphs!.map((p) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                p['en'] ?? '',
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium!.color,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                p['vi'] ?? '',
-                                textAlign: TextAlign.justify,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF015E53),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                            ],
-                          );
-                        }).toList(),
-                      )
-                    : Text(
-                        article.content.isNotEmpty
-                            ? article.content
-                            : article.description,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.6,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                        ),
-                      ),
+                Text(
+                  article.content.isNotEmpty
+                      ? article.content
+                      : article.description,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.6,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                  ),
+                ),
                 const SizedBox(height: 40),
 
                 ArticleCommentsWidget(article: article),
@@ -392,32 +318,11 @@ class _ArticleDetailState extends State<ArticleDetail> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "AI đang tóm tắt...",
+                      "Đang tóm tắt nội dung...",
                       style: TextStyle(
                         color: Theme.of(context).textTheme.bodyLarge!.color,
                         fontSize: 18,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-          if (_isTranslating)
-            Container(
-              color: Colors.black.withOpacity(0.4),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Color(0xFF015E53)),
-                      strokeWidth: 4,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      "Đang dịch bài...",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ],
                 ),

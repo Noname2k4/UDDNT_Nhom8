@@ -30,15 +30,16 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.newspaper_rounded,
-                size: 64,
-                color: Colors.white,
+              child: Image.asset(
+                'screenshots/logo.png',
+                width: 90,
+                height: 90,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(height: 24),
@@ -55,19 +56,10 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 8),
 
             const Text(
-              'Read • Learn • Improve English',
+              'Chào mừng đến với Newss',
               style: TextStyle(fontSize: 14, color: Colors.white70),
             ),
             const SizedBox(height: 40),
-
-            const SizedBox(
-              width: 28,
-              height: 28,
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
       ),

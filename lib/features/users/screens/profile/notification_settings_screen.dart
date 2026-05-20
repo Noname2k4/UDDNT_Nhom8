@@ -18,7 +18,6 @@ class _NotificationSettingsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: const Text(
           'Cài đặt thông báo',
@@ -35,12 +34,11 @@ class _NotificationSettingsScreenState
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-
           Text(
             "Thông báo chung",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
 
           SwitchListTile(
@@ -60,14 +58,16 @@ class _NotificationSettingsScreenState
 
           Text(
             "Tùy chọn thông báo",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
 
           SwitchListTile(
-            title: Text("Tin tức hằng ngày",
-                style: Theme.of(context).textTheme.bodyMedium),
+            title: Text(
+              "Tin tức hằng ngày",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             subtitle: Text(
               "Gửi gợi ý bài báo mỗi buổi sáng",
               style: Theme.of(context).textTheme.bodySmall,
@@ -79,8 +79,10 @@ class _NotificationSettingsScreenState
           ),
 
           SwitchListTile(
-            title: Text("Tin nóng (Breaking News)",
-                style: Theme.of(context).textTheme.bodyMedium),
+            title: Text(
+              "Tin nóng (Breaking News)",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             subtitle: Text(
               "Nhận thông báo khi có sự kiện quan trọng",
               style: Theme.of(context).textTheme.bodySmall,
@@ -95,11 +97,20 @@ class _NotificationSettingsScreenState
 
           Center(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Đã lưu cài đặt"),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF015E53),
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 34, vertical: 14),
+                  horizontal: 34,
+                  vertical: 14,
+                ),
               ),
               child: const Text(
                 "Lưu cài đặt",

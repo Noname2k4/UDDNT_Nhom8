@@ -20,14 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<ArticleModel> _results = [];
   bool _isLoading = false;
 
-  final List<String> _suggestions = [
-    'Football',
-    'Weather',
-    'AI',
-    'Economy',
-    'Education',
-    'Technology',
-  ];
+  final List<String> _suggestions = [];
 
   @override
   void initState() {
@@ -85,12 +78,17 @@ class _SearchScreenState extends State<SearchScreen> {
                 hintText: 'Nhập từ khóa bài báo...',
                 hintStyle: TextStyle(color: cs.onSurfaceVariant),
                 filled: true,
-                fillColor: cs.surface, 
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                fillColor: cs.surface,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
                 suffixIcon: _searchController.text.isEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.search, color: Color(0xFF015E53)),
+                        icon: const Icon(
+                          Icons.search,
+                          color: Color(0xFF015E53),
+                        ),
                         onPressed: _searchArticles,
                       )
                     : IconButton(
@@ -110,7 +108,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Color(0xFF015E53), width: 1.5),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF015E53),
+                    width: 1.5,
+                  ),
                 ),
               ),
               onChanged: (_) => setState(() {}),
@@ -123,18 +124,22 @@ class _SearchScreenState extends State<SearchScreen> {
               child: _searchController.text.isEmpty
                   ? _buildSuggestions(theme, cs)
                   : _isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(color: const Color(0xFF015E53)),
-                        )
-                      : _results.isEmpty
-                          ? Center(
-                              child: Text(
-                                'Không có kết quả nào phù hợp',
-                                style: TextStyle(
-                                    color: cs.onSurfaceVariant, fontSize: 16),
-                              ),
-                            )
-                          : _buildResultList(theme, cs),
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: const Color(0xFF015E53),
+                      ),
+                    )
+                  : _results.isEmpty
+                  ? Center(
+                      child: Text(
+                        'Không có kết quả nào phù hợp',
+                        style: TextStyle(
+                          color: cs.onSurfaceVariant,
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  : _buildResultList(theme, cs),
             ),
           ],
         ),
@@ -158,8 +163,10 @@ class _SearchScreenState extends State<SearchScreen> {
         Expanded(
           child: ListView.separated(
             itemCount: _suggestions.length,
-            separatorBuilder: (_, __) =>
-                Divider(height: 12, color: const Color.fromARGB(255, 174, 174, 174).withOpacity(0.2)),
+            separatorBuilder: (_, __) => Divider(
+              height: 12,
+              color: const Color.fromARGB(255, 174, 174, 174).withOpacity(0.2),
+            ),
             itemBuilder: (context, index) {
               final keyword = _suggestions[index];
               return ListTile(
@@ -180,8 +187,10 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildResultList(ThemeData theme, ColorScheme cs) {
     return ListView.separated(
       itemCount: _results.length,
-      separatorBuilder: (_, __) =>
-          Divider(height: 24, color: const Color.fromARGB(255, 197, 197, 197).withOpacity(0.2)),
+      separatorBuilder: (_, __) => Divider(
+        height: 24,
+        color: const Color.fromARGB(255, 197, 197, 197).withOpacity(0.2),
+      ),
       itemBuilder: (context, index) {
         final article = _results[index];
 
@@ -212,14 +221,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: article.image.isNotEmpty
-                      ? Image.network(article.image,
-                          width: 90, height: 70, fit: BoxFit.cover)
+                      ? Image.network(
+                          article.image,
+                          width: 90,
+                          height: 70,
+                          fit: BoxFit.cover,
+                        )
                       : Container(
                           width: 90,
                           height: 70,
                           color: cs.surfaceContainerHighest,
-                          child: const Icon(Icons.article_outlined,
-                              color: Colors.white),
+                          child: const Icon(
+                            Icons.article_outlined,
+                            color: Colors.white,
+                          ),
                         ),
                 ),
                 const SizedBox(width: 12),

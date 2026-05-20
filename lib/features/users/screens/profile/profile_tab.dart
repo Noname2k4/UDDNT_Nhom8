@@ -18,9 +18,7 @@ class ProfileTab extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     if (userVM.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(color: colors.primary),
-      );
+      return Center(child: CircularProgressIndicator(color: colors.primary));
     }
 
     final user = userVM.currentUser;
@@ -47,8 +45,9 @@ class ProfileTab extends StatelessWidget {
                     CircleAvatar(
                       radius: 55,
                       backgroundColor: colors.surfaceContainerHighest,
-                      backgroundImage:
-                          user.image.isNotEmpty ? NetworkImage(user.image) : null,
+                      backgroundImage: user.image.isNotEmpty
+                          ? NetworkImage(user.image)
+                          : null,
                       child: user.image.isEmpty
                           ? Text(
                               user.fullName.isNotEmpty
@@ -165,12 +164,6 @@ class ProfileTab extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     context: context,
-                    icon: Icons.help_outline,
-                    title: 'Trợ giúp & Hỗ trợ',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    context: context,
                     icon: Icons.logout,
                     title: 'Đăng xuất',
                     color: Colors.red,
@@ -214,7 +207,7 @@ class ProfileTab extends StatelessWidget {
                                   "Đăng xuất",
                                   style: TextStyle(color: dialogColors.primary),
                                 ),
-                              )
+                              ),
                             ],
                           );
                         },
@@ -224,7 +217,8 @@ class ProfileTab extends StatelessWidget {
                         await userVM.signOut();
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
+                            builder: (context) => const LoginScreen(),
+                          ),
                           (route) => false,
                         );
                       }

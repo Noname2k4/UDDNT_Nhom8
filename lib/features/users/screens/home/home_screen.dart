@@ -1,7 +1,6 @@
 import 'package:newss/features/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'home_tab.dart';
 import '../search/search_tab.dart';
 import '../category/category_tab.dart';
 import '../profile/profile_tab.dart';
@@ -24,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     const LatestArticlesScreen(key: ValueKey('latest')),
-    const HomeTab(key: ValueKey('home')),
     const CategoryTab(key: ValueKey('category')),
     const SavedArticlesScreen(key: ValueKey('saved')),
     const ProfileTab(key: ValueKey('profile')),
@@ -40,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       listen: false,
     ).currentUser;
 
-    if (user == null && (index == 3 || index == 4)) {
+    if (user == null && (index == 2 || index == 3)) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -134,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 0, 8),
                 child: Text(
-                  "Cài đặt & Hỗ trợ",
+                  "Cài đặt",
                   style: TextStyle(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
@@ -176,18 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               Divider(color: theme.dividerColor),
-
-              _drawerItem(Icons.star_border, "Đánh giá ứng dụng"),
-              _drawerItem(Icons.feedback_outlined, "Góp ý & Hỗ trợ"),
-              _drawerItem(Icons.info_outline, "Giới thiệu"),
-
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(
-                  "Phiên bản 1.0.0",
-                  style: TextStyle(color: theme.hintColor, fontSize: 13),
-                ),
-              ),
             ],
           ),
         ),
@@ -216,14 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
             label: "Trang chủ",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article),
-            label: "Tin tức",
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.view_list_outlined),
             activeIcon: Icon(Icons.view_list),
-            label: "Chuyên mục",
+            label: "Chủ đề",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bookmark_outline),

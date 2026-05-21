@@ -69,7 +69,7 @@ Newss là ứng dụng cập nhật tin tức được phát triển bằng Flut
       <td><img src="screenshots/21.png" width="150"/></td>
       <td><img src="screenshots/22.png" width="150"/></td>
       <td><img src="screenshots/23.png" width="150"/></td>
-      <td><img src="screenshots/24png" width="150"/></td>
+      <td><img src="screenshots/24.png" width="150"/></td>
     </tr>
   </table>
 </div>
@@ -90,7 +90,7 @@ Newss là ứng dụng cập nhật tin tức được phát triển bằng Flut
       <td><img src="screenshots/17.png" width="150"/></td>
       <td><img src="screenshots/18.png" width="150"/></td>
       <td><img src="screenshots/19.png" width="150"/></td>
-      <td><img src="screenshots/20png" width="150"/></td>
+      <td><img src="screenshots/20.png" width="150"/></td>
     </tr>
   </table>
 </div>

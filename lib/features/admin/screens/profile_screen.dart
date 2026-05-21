@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodel/authen_viewmodel.dart';
-import '../../authentication/login_screen.dart'; 
+import '../../authentication/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -16,10 +16,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Hồ sơ cá nhân",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -37,7 +34,9 @@ class ProfileScreen extends StatelessWidget {
                     radius: 65,
                     backgroundImage: (user.image.isNotEmpty)
                         ? NetworkImage(user.image)
-                        : const NetworkImage("https://i.pravatar.cc/150?img=10"),
+                        : const NetworkImage(
+                            "https://static1.thegamerimages.com/wordpress/wp-content/uploads/wm/2024/11/mavuika-prepares-for-battle-while-donning-sunglasses-in-genshin-impact.jpg",
+                          ),
                   ),
                   const SizedBox(height: 16),
 
@@ -59,7 +58,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
                       child: Column(
                         children: [
                           _infoItem(Icons.email, "Email", user.email),
@@ -68,7 +69,11 @@ class ProfileScreen extends StatelessWidget {
                           _infoItem(Icons.phone, "Số điện thoại", user.phone),
                           const SizedBox(height: 12),
 
-                          _infoItem(Icons.verified_user, "Quyền hạn", user.role),
+                          _infoItem(
+                            Icons.verified_user,
+                            "Quyền hạn",
+                            user.role,
+                          ),
                         ],
                       ),
                     ),
@@ -99,8 +104,12 @@ class ProfileScreen extends StatelessWidget {
                           actions: [
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                foregroundColor:
-                                    const Color.fromARGB(221, 126, 126, 126),
+                                foregroundColor: const Color.fromARGB(
+                                  221,
+                                  126,
+                                  126,
+                                  126,
+                                ),
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26),
@@ -132,7 +141,8 @@ class ProfileScreen extends StatelessWidget {
 
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
+                            builder: (context) => const LoginScreen(),
+                          ),
                           (route) => false,
                         );
                       }
@@ -140,9 +150,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: const Icon(Icons.logout),
                     label: const Text(
                       "Đăng xuất",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFB42652),
@@ -162,30 +170,30 @@ class ProfileScreen extends StatelessWidget {
   Widget _infoItem(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 22,
-          color: Color(0xFFB42652),
-        ),
+        Icon(icon, size: 22, color: Color(0xFFB42652)),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black54,
-                  )),
-              Text(value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  )),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                ),
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dashboard_page.dart';
-import 'category_manager_page.dart'; 
+import 'category_manager_page.dart';
 import 'article_manager_page.dart';
 import 'user_manager_page.dart';
-import 'system_settings_page.dart';
 import 'profile_screen.dart';
 import '../../viewmodel/authen_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +18,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    DashboardPage(), 
-    CategoryManagerPage(), 
-    ArticleManagerPage(), 
-    UserManagerPage(), 
-    SystemSettingsPage(), 
+    DashboardPage(),
+    CategoryManagerPage(),
+    ArticleManagerPage(),
+    UserManagerPage(),
   ];
 
   @override
@@ -44,10 +42,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         ),
         title: const Text(
           "Admin Panel",
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         actions: [
           Consumer<AuthenViewModel>(
@@ -68,12 +63,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     backgroundColor: Colors.grey.shade300,
                     backgroundImage: (photo != null && photo.isNotEmpty)
                         ? NetworkImage(photo)
-                        : const NetworkImage("https://i.pravatar.cc/150?img=10"),
+                        : const NetworkImage(
+                            "https://static1.thegamerimages.com/wordpress/wp-content/uploads/wm/2024/11/mavuika-prepares-for-battle-while-donning-sunglasses-in-genshin-impact.jpg",
+                          ),
                   ),
                 ),
               );
             },
-          )
+          ),
         ],
       ),
 
@@ -108,7 +105,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _drawerItem(Icons.grid_view, "Quản lý danh mục", 1),
             _drawerItem(Icons.article, "Quản lý bài viết", 2),
             _drawerItem(Icons.person, "Quản lý người dùng", 3),
-            _drawerItem(Icons.settings, "Cài đặt hệ thống", 4),
 
             const Spacer(),
             const Padding(
@@ -139,7 +135,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         ),
         child: Row(
           children: [
-            Icon(icon, color: selected ? Colors.blue : Colors.black87, size: 22),
+            Icon(
+              icon,
+              color: selected ? Colors.blue : Colors.black87,
+              size: 22,
+            ),
             const SizedBox(width: 12),
             Text(
               title,
@@ -148,7 +148,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 fontSize: 16,
                 fontWeight: selected ? FontWeight.bold : FontWeight.normal,
               ),
-            )
+            ),
           ],
         ),
       ),

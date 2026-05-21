@@ -13,13 +13,12 @@ class DashboardPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               children: [
                 Expanded(
                   child: _buildStatCard(
                     "Khách",
-                    "125",
+                    "4",
                     Icons.people_alt_rounded,
                     Colors.blue,
                   ),
@@ -28,7 +27,7 @@ class DashboardPage extends StatelessWidget {
                 Expanded(
                   child: _buildStatCard(
                     "Bài viết",
-                    "251",
+                    "10",
                     Icons.article_rounded,
                     Colors.deepPurple,
                   ),
@@ -37,7 +36,7 @@ class DashboardPage extends StatelessWidget {
                 Expanded(
                   child: _buildStatCard(
                     "Truy cập",
-                    "74",
+                    "1",
                     Icons.show_chart_rounded,
                     Colors.green,
                   ),
@@ -49,7 +48,7 @@ class DashboardPage extends StatelessWidget {
             const Text(
               "Biểu đồ truy cập tuần",
               style: TextStyle(
-                fontSize: 22, 
+                fontSize: 22,
                 fontWeight: FontWeight.w700,
                 color: Colors.black87,
               ),
@@ -61,19 +60,36 @@ class DashboardPage extends StatelessWidget {
                 LineChartData(
                   gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         interval: 1,
                         getTitlesWidget: (value, meta) {
-                          const days = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+                          const days = [
+                            "T2",
+                            "T3",
+                            "T4",
+                            "T5",
+                            "T6",
+                            "T7",
+                            "CN",
+                          ];
                           if (value < 0 || value > 6) return const SizedBox();
                           return Text(
                             days[value.toInt()],
-                            style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black54),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54,
+                            ),
                           );
                         },
                       ),
@@ -103,63 +119,12 @@ class DashboardPage extends StatelessWidget {
                         FlSpot(5, 8),
                         FlSpot(6, 9),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 35),
-
-            const Text(
-              "Tỷ lệ phân loại bài viết",
-              style: TextStyle(
-                fontSize: 22, 
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            _chartContainer(
-              PieChart(
-                PieChartData(
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 40,
-                  sections: [
-                    PieChartSectionData(
-                      value: 40,
-                      color: Colors.blue.shade400,
-                      title: "Tin tức",
-                      radius: 60,
-                      titleStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                    PieChartSectionData(
-                      value: 30,
-                      color: Colors.green.shade400,
-                      title: "Blog",
-                      radius: 60,
-                      titleStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                    PieChartSectionData(
-                      value: 15,
-                      color: Colors.orange.shade400,
-                      title: "Podcast",
-                      radius: 60,
-                      titleStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                    PieChartSectionData(
-                      value: 15,
-                      color: Colors.red.shade400,
-                      title: "Khác",
-                      radius: 60,
-                      titleStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -175,7 +140,12 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: _boxDecoration(),
@@ -201,10 +171,10 @@ class DashboardPage extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 15,
-              color: Colors.grey.shade800, 
+              color: Colors.grey.shade800,
               fontWeight: FontWeight.w600,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -220,7 +190,7 @@ class DashboardPage extends StatelessWidget {
           blurRadius: 12,
           spreadRadius: 1,
           offset: const Offset(2, 4),
-        )
+        ),
       ],
     );
   }

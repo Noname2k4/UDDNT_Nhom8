@@ -49,14 +49,34 @@ class _UserManagerPageState extends State<UserManagerPage> {
     final vm = Provider.of<UserManagerViewModel>(context, listen: false);
     await vm.deleteUser(uid);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Đã xoá người dùng!")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Đã xoá người dùng!")));
 
     _loadUsers();
   }
 
+  // Kiểm tra có phải admin không
+  bool _isAdmin(UserModel user) {
+    return user.role.toLowerCase() == 'admin';
+  }
+
+  void _showAdminProtectedSnackBar(String action) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Không thể $action tài khoản Admin"),
+        backgroundColor: Colors.red.shade700,
+      ),
+    );
+  }
+
   void _showStatusBottomSheet(UserModel user) {
+    // Chặn nếu là admin
+    if (_isAdmin(user)) {
+      _showAdminProtectedSnackBar("chặn");
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -109,6 +129,38 @@ class _UserManagerPageState extends State<UserManagerPage> {
     );
   }
 
+  void _confirmDeleteUser(UserModel user) {
+    // Chặn nếu là admin
+    if (_isAdmin(user)) {
+      _showAdminProtectedSnackBar("xoá");
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Xác nhận xoá"),
+        content: Text(
+          "Bạn có chắc muốn xoá tài khoản \"${user.fullName}\" không?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Huỷ"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _deleteUser(user.uid);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text("Xoá"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,163 +168,186 @@ class _UserManagerPageState extends State<UserManagerPage> {
       child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _users.isEmpty
-              ? const Center(child: Text("Không có người dùng nào"))
-              : RefreshIndicator(
-                  onRefresh: _loadUsers,
-                  child: ListView.builder(
-                    itemCount: _users.length,
-                    itemBuilder: (context, index) {
-                      final user = _users[index];
+          ? const Center(child: Text("Không có người dùng nào"))
+          : RefreshIndicator(
+              onRefresh: _loadUsers,
+              child: ListView.builder(
+                itemCount: _users.length,
+                itemBuilder: (context, index) {
+                  final user = _users[index];
+                  final isAdmin = _isAdmin(user);
 
-                      return Card(
-                        color: Colors.white,
-                        surfaceTintColor: Colors.white,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  return Card(
+                    color: Colors.white,
+                    surfaceTintColor: Colors.white,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
                             children: [
-                              Column(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 26,
-                                    backgroundColor: Colors.grey.shade300,
-                                    backgroundImage: user.image.isNotEmpty
-                                        ? NetworkImage(user.image)
-                                        : null,
-                                    child: user.image.isEmpty
-                                        ? const Icon(Icons.person,
-                                            color: Colors.white)
-                                        : null,
-                                  ),
-                                  const SizedBox(height: 6),
-
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(20),
-                                    onTap: () => _showStatusBottomSheet(user),
-                                    child: Container(
-                                      height: 32,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12),
-                                      decoration: BoxDecoration(
-                                        color: user.isActive
-                                            ? Colors.green.shade50
-                                            : Colors.orange.shade50,
-                                        borderRadius:
-                                            BorderRadius.circular(20),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            user.isActive
-                                                ? "Hoạt động"
-                                                : "Chặn",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: user.isActive
-                                                  ? Colors.green.shade700
-                                                  : Colors.orange.shade700,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Icon(
-                                            Icons.arrow_drop_down,
-                                            size: 18,
-                                            color: user.isActive
-                                                ? Colors.green.shade700
-                                                : Colors.orange.shade700,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              CircleAvatar(
+                                radius: 26,
+                                backgroundColor: Colors.grey.shade300,
+                                backgroundImage: user.image.isNotEmpty
+                                    ? NetworkImage(user.image)
+                                    : null,
+                                child: user.image.isEmpty
+                                    ? const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                      )
+                                    : null,
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(height: 6),
 
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      user.fullName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                              // Badge trạng thái — admin thì không cho bấm đổi trạng thái
+                              InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: isAdmin
+                                    ? () => _showAdminProtectedSnackBar("chặn")
+                                    : () => _showStatusBottomSheet(user),
+                                child: Container(
+                                  height: 32,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isAdmin
+                                        ? Colors.purple.shade50
+                                        : user.isActive
+                                        ? Colors.green.shade50
+                                        : Colors.orange.shade50,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        isAdmin
+                                            ? "Admin"
+                                            : user.isActive
+                                            ? "Hoạt động"
+                                            : "Chặn",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: isAdmin
+                                              ? Colors.purple.shade700
+                                              : user.isActive
+                                              ? Colors.green.shade700
+                                              : Colors.orange.shade700,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text("Email: ${user.email}"),
-                                    Text("Role: ${user.role}"),
-                                  ],
+                                      // Ẩn mũi tên dropdown với admin
+                                      if (!isAdmin) ...[
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          size: 18,
+                                          color: user.isActive
+                                              ? Colors.green.shade700
+                                              : Colors.orange.shade700,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
                                 ),
                               ),
-
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextButton(
-                                    onPressed: user.isActive
-                                        ? () async {
-                                            final result =
-                                                await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    EditUserPage(user: user),
-                                              ),
-                                            );
-                                            if (result == true) {
-                                              _loadUsers();
-                                            }
-                                          }
-                                        : null,
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: user.isActive
-                                          ? Colors.blue.shade50
-                                          : Colors.grey.shade200,
-                                      foregroundColor: user.isActive
-                                          ? Colors.blue.shade800
-                                          : Colors.grey,
-                                      minimumSize: const Size(60, 32),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12),
-                                    ),
-                                    child: const Text(
-                                      "Chi tiết",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  TextButton(
-                                    onPressed: () => _deleteUser(user.uid),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.red.shade50,
-                                      foregroundColor: Colors.red.shade800,
-                                      minimumSize: const Size(60, 32),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12),
-                                    ),
-                                    child: const Text(
-                                      "Xoá",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              )
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          const SizedBox(width: 12),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.fullName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text("Email: ${user.email}"),
+                                Text("Role: ${user.role}"),
+                              ],
+                            ),
+                          ),
+
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: user.isActive
+                                    ? () async {
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                EditUserPage(user: user),
+                                          ),
+                                        );
+                                        if (result == true) {
+                                          _loadUsers();
+                                        }
+                                      }
+                                    : null,
+                                style: TextButton.styleFrom(
+                                  backgroundColor: user.isActive
+                                      ? Colors.blue.shade50
+                                      : Colors.grey.shade200,
+                                  foregroundColor: user.isActive
+                                      ? Colors.blue.shade800
+                                      : Colors.grey,
+                                  minimumSize: const Size(60, 32),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Chi tiết",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextButton(
+                                // Admin thì disable nút Xoá
+                                onPressed: isAdmin
+                                    ? null
+                                    : () => _confirmDeleteUser(user),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: isAdmin
+                                      ? Colors.grey.shade200
+                                      : Colors.red.shade50,
+                                  foregroundColor: isAdmin
+                                      ? Colors.grey
+                                      : Colors.red.shade800,
+                                  minimumSize: const Size(60, 32),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Xoá",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 }
